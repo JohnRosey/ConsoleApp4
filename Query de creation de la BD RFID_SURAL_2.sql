@@ -69,7 +69,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER TABLE [dbo].[noovelia_kencee_antenne]
+CREATE TABLE [dbo].[noovelia_kencee_antenne]
 (
 	
 	[Etat] [varchar](50)NOT NULL,
@@ -117,7 +117,7 @@ GO
 
 CREATE TABLE [dbo].[noovelia_kencee_emplacement]
 (
-	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[Location_ID] [varchar](50)  NOT NULL,
 	[Emplacement_ID] [varchar](255) NULL,
 	[Position_X] [varchar](50) NULL,
 	[Position_Y] [varchar](50) NULL,
@@ -448,6 +448,8 @@ INSERT INTO noovelia_kencee_anode_distance (numero_anode,min,nomi,max) VALUES ( 
 
 
 /* TABLE noovelia_kencee_emplacement   */
+SET IDENTITY_INSERT dbo. noovelia_kencee_emplacement ON;  
+GO
 INSERT INTO noovelia_kencee_emplacement
 	(Location_ID,Position_X,Position_Y,Nom_Emplacement,Fonction,Emplacement)
 VALUES
@@ -556,8 +558,8 @@ VALUES
 
 /* //
 //TABLE noovelia_kencee_equipment   */
-
-INSERT INTO noovelia_kencee_equipment (Numero_De_Serie,Etat,Fonction,Row_id,Nom,Tag_id) VALUES ('63908', 'ACTIF', 'TRACKING', '87', 'PINCE ANODE', 'NULL');
+SET IDENTITY_INSERT dbo. noovelia_kencee_equipment ON;  
+GO
 INSERT INTO noovelia_kencee_equipment (Numero_De_Serie,Etat,Fonction,Row_id,Nom,Tag_id) VALUES ('63911-01', 'ACTIF', 'TRACKING', '76', 'OUTIL CLAD', 'NULL');
 INSERT INTO noovelia_kencee_equipment (Numero_De_Serie,Etat,Fonction,Row_id,Nom,Tag_id) VALUES ('63911-02', 'ACTIF', 'TRACKING', '77', 'OUTIL CLAD', 'NULL');
 INSERT INTO noovelia_kencee_equipment (Numero_De_Serie,Etat,Fonction,Row_id,Nom,Tag_id) VALUES ('63911-03', 'ACTIF', 'TRACKING', '78', 'OUTIL CLAD', 'NULL');
