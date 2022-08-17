@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
@@ -32,8 +33,8 @@ namespace ConsoleApp4
 
                 //Declare Variables and provide values
                 string FileNamePart = "Detection";//Datetime will be added to it
-                string DestinationFolderWriter = @"A:\ABI1\PC\";
-                string DestinationFolderReader = @"A:\ABI1\PC\";
+                string DestinationFolderWriter = @"O:\Temporaire\Olivier Fortin\Fichier ecriture csv";
+                string DestinationFolderReader = @"O:\Temporaire\Olivier Fortin\Fichier lecture csv";
 
                 string FileDelimiter = ";"; //You can provide comma or pipe or whatever you like
                 string FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
@@ -94,15 +95,15 @@ SELECT D.[detection_id]
 
 
 FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
-  WHERE (D.[insert_timestamp] >= '2022-07-13 08:00:00.000' and  D.[insert_timestamp]<'2022-07-14 08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
+  WHERE (D.[insert_timestamp] >= @yesterday +'08:00:00.000' and  D.[insert_timestamp]<@today +'08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
 ORDER BY D.detection_id Asc  ";
 
-                //SqlCommand cmd = new SqlCommand(query2, SQLConnection);
-                //SQLConnection.Open();
-                //DataTable d_table = new DataTable();
-                //d_table.Load(cmd.ExecuteReader());
-                //Console.WriteLine(d_table);
-                //SQLConnection.Close();
+                SqlCommand cmd = new SqlCommand(query2, SQLConnection);
+                SQLConnection.Open();
+                DataTable d_table = new DataTable();
+                d_table.Load(cmd.ExecuteReader());
+                Console.WriteLine(d_table);
+                SQLConnection.Close();
 
                 //Prepare the file path 
 
@@ -112,39 +113,39 @@ ORDER BY D.detection_id Asc  ";
                 sw = new StreamWriter(FileFullPath, false);
 
                 //// Write the Header Row to File
-                //int ColumnCount = d_table.Columns.Count;
-                //for (int ic = 0; ic < ColumnCount; ic++)
-                //{
-                //    sw.Write(d_table.Columns[ic]);
-                //    if (ic < ColumnCount - 1)
-                //    {
-                //        sw.Write(FileDelimiter);
-                //    }
-                //}
-                //Console.WriteLine("50%");
-                //sw.Write(sw.NewLine);
+                int ColumnCount = d_table.Columns.Count;
+                for (int ic = 0; ic < ColumnCount; ic++)
+                {
+                    sw.Write(d_table.Columns[ic]);
+                    if (ic < ColumnCount - 1)
+                   {
+                       sw.Write(FileDelimiter);
+                   }
+                }
+                Console.WriteLine("50%");
+                sw.Write(sw.NewLine);
 
                 //// Write All Rows to the File
-                //foreach (DataRow dr in d_table.Rows)
-                //{
-                //    for (int ir = 0; ir < ColumnCount; ir++)
-                //    {
-                //        if (!Convert.IsDBNull(dr[ir]))
-                //        {
-                //            sw.Write(dr[ir].ToString());
-                //        }
-                //        if (ir < ColumnCount - 1)
-                //        {
-                //            sw.Write(FileDelimiter);
-                //        }
-                //    }
-                //    sw.Write(sw.NewLine);
+                foreach (DataRow dr in d_table.Rows)
+                {
+                    for (int ir = 0; ir < ColumnCount; ir++)
+                    {
+                        if (!Convert.IsDBNull(dr[ir]))
+                       {
+                           sw.Write(dr[ir].ToString());
+                       }
+                       if (ir < ColumnCount - 1)
+                       {
+                           sw.Write(FileDelimiter);
+                        }
+                   }
+                    sw.Write(sw.NewLine);
 
-                //}
-                //Console.WriteLine("100%");
-               // Console.WriteLine("ALGO EN COURS");
+                }
+                Console.WriteLine("100%");
+               Console.WriteLine("ALGO EN COURS");
                 
-                //sw.Close();
+                sw.Close();
                 string[][] BD; // importer de la BD
                 string[][] cp; // tableau final
                 int[][] bd; // ligne trier pour 5 point consecutif et nombre de point consecutif
@@ -190,8 +191,8 @@ ORDER BY D.detection_id Asc  ";
 
 
 
-                //  using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
-                using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
+                 using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+               // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
@@ -206,11 +207,11 @@ ORDER BY D.detection_id Asc  ";
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
                 ligne = new int[(size)];
 
-                using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
+                using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart}_{datetime}{FileExtension}"))
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
-                        mots = st.Split(',');
+                        mots = st.Split(';');
                         for (int i = 0; i < 7; i++)
                         {
                             BD[x][i] = mots[i];
