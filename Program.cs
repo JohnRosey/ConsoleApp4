@@ -110,6 +110,8 @@ ORDER BY D.detection_id Asc  ";
                 string FileFullPath = $"{DestinationFolderWriter}\\{FileNamePart+"_"+"BRUTE"}_{datetime}{FileExtension}";
 
                 StreamWriter sw = null;
+
+                //ECRITURE DU FICHIER CSV
                 sw = new StreamWriter(FileFullPath, false);
 
                 //// Write the Header Row to File
@@ -190,18 +192,19 @@ ORDER BY D.detection_id Asc  ";
                 //PC/DETECTION_DATA_ANODES2.txt
 
 
-
-                 using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+                WriteLine("COMPTE LE NOMBRE DE LIGNES ");
+                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
-                        size = size + 1;
+                        size += 1;
                     }
                 }
 
-                WriteLine(size);
+                WriteLine("NOMBRE DE LIGNES EST DE : "+size);
+
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
                 //ORIGINAL LINE: BD = new string[(size)][8]; // tableau
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
@@ -217,7 +220,7 @@ ORDER BY D.detection_id Asc  ";
                             BD[x][i] = mots[i];
                         }
 
-                        x = x + 1;
+                        x += 1;
                         BD[x - 1][7] = x.ToString();
                     }
                 }
@@ -235,7 +238,7 @@ ORDER BY D.detection_id Asc  ";
                     if ( (extremite1 > 7.393) & extremite2 < 15.82)
                     {
                         ligne[m] = i;
-                        m = m + 1;
+                        m += 1;
                     }
 
                 }
@@ -273,7 +276,7 @@ ORDER BY D.detection_id Asc  ";
                     if ((double.Parse(BD[ligne[i]][4], System.Globalization.CultureInfo.InvariantCulture) - 0.4) < tempo.Value &
                         (double.Parse(BD[ligne[i]][4], System.Globalization.CultureInfo.InvariantCulture) + 0.4) > tempo.Value & ligne[i] == ligne[i - 1] + 1)
                     {
-                        n = n + 1;
+                        n += 1;
                         tempo = double.Parse(BD[ligne[i]][4], System.Globalization.CultureInfo.InvariantCulture);
                        
                     }
@@ -315,12 +318,12 @@ ORDER BY D.detection_id Asc  ";
                     {
                         if ((double.Parse(BD[bd[j][0] + i][4], System.Globalization.CultureInfo.InvariantCulture) > 3.8) & (double.Parse(BD[bd[j][0] + i][4], System.Globalization.CultureInfo.InvariantCulture) < 5.2))
                         {
-                            n = n + 1;
+                            n += 1;
                             if (n > 1)
                             {
                                 CP[k][0] = bd[j][0];
                                 CP[k][1] = bd[j][1];
-                                k = k + 1;
+                                k += 1;
                                 i = 10;
                                  
                             }
@@ -343,7 +346,7 @@ ORDER BY D.detection_id Asc  ";
 
                 //FileWriter fw = new FileWriter("PC/DETECTION_DATA_ANODES2.txt");
 
-                string fileName = $"{DestinationFolderWriter}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";
+                string fileName = $"{DestinationFolderReader}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";
                 //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
