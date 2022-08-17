@@ -208,7 +208,10 @@ ORDER BY D.detection_id Asc  ";
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
                 //ORIGINAL LINE: BD = new string[(size)][8]; // tableau
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 7); // tableau du nombre d'elements +1
-                ligne = new int[(size)];
+                ligne = new int[(size)];       
+
+
+
 
                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                 {
