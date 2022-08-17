@@ -343,7 +343,7 @@ ORDER BY D.detection_id Asc  ";
 
                 //FileWriter fw = new FileWriter("PC/DETECTION_DATA_ANODES2.txt");
 
-                string fileName = $"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}";
+                string fileName = $"{DestinationFolderWriter}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";
                 //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
