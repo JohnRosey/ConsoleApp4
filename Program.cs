@@ -107,7 +107,7 @@ ORDER BY D.detection_id Asc  ";
 
                 //Prepare the file path 
 
-                string FileFullPath = $"{DestinationFolderWriter}\\{FileNamePart+"_"+"BRUTE"}_{datetime}{FileExtension}";
+                string FileFullPath = $"{DestinationFolderReader}\\{FileNamePart+"_"+"BRUTE"}_{datetime}{FileExtension}";
 
                 StreamWriter sw = null;
                 sw = new StreamWriter(FileFullPath, false);
@@ -191,7 +191,7 @@ ORDER BY D.detection_id Asc  ";
 
 
 
-                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+                 using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
@@ -343,7 +343,7 @@ ORDER BY D.detection_id Asc  ";
 
                 //FileWriter fw = new FileWriter("PC/DETECTION_DATA_ANODES2.txt");
 
-                string fileName = $"{DestinationFolderReader}\\{FileNamePart}_{datetime}{FileExtension}";
+                string fileName = $"{DestinationFolderWriter}\\{FileNamePart + "_" + "TRAITE"}_{datetime}{FileExtension}";
                 //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
