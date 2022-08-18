@@ -336,7 +336,7 @@ ORDER BY D.detection_id Asc  ";
                 string fileName = $"{DestinationFolderReader}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";                //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
-                writer.Write("anode_number;scope_time;location_name;timestamp;line_number\n");
+                writer.Write("anode_number;scope_time;location_name;timestamp;\n");
 
                // writer.Write(writer.NewLine);
                 for (int j = 0; j < k; j++)
