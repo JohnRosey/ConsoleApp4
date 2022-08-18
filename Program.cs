@@ -49,7 +49,7 @@ ON A.Reader_uwb_id=D.reader_uwb_id
 INNER JOIN [ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].dbo.noovelia_kencee_balise as B
 ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE' WHERE [insert_timestamp]>='2022-05-31'
 and B.Nom_Emplacement=A.Nom_Emplacement    
-ORDER BY Emplacement ,detection_id asc";
+ORDER BY Emplacement ,detection_id desc";
 
 
 
@@ -177,10 +177,10 @@ ORDER BY D.detection_id Asc  ";
                     while (!ReferenceEquals(st = br.ReadLine(), null))
                     {
                         mots = st.Split(';');
-                        for (int i = 0; i < 7; i++) BD[x][i] = mots[i];
+                        for (int i = 0; i < 6; i++) BD[x][i] = mots[i];
 
                         x += 1;
-                        BD[x - 1][7] = x.ToString();
+                        BD[x - 1][6] = x.ToString();
                     }
                 }
 
