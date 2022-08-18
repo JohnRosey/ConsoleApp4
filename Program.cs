@@ -33,8 +33,8 @@ namespace ConsoleApp4
 
                 //Declare Variables and provide values
                 string FileNamePart = "Detection";//Datetime will be added to it
-                string DestinationFolderWriter = @"O:\Temporaire\Olivier Fortin\Fichier ecriture csv";
-                string DestinationFolderReader = @"O:\Temporaire\Olivier Fortin\Fichier lecture csv";
+                string DestinationFolderWriter = @"A:\Temporaire\Olivier Fortin\Fichier ecriture csv";
+                string DestinationFolderReader = @"A:\Temporaire\Olivier Fortin\Fichier lecture csv";
 
                 string FileDelimiter = ";"; //You can provide comma or pipe or whatever you like
                 string FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
@@ -63,7 +63,7 @@ namespace ConsoleApp4
                 // WHERE insert_timestamp >= '08:00:00'
                 //ORDER BY detection_id Asc";
                 SqlConnection SQLConnection = new SqlConnection();
-                SQLConnection.ConnectionString = @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
+                SQLConnection.ConnectionString = @"Data Source = .; Database =RFID_SURAL_2 ;Integrated Security=SSPI";
 
                 string query = @" 
            SELECT 
@@ -78,27 +78,49 @@ D.[detection_id],
   FROM[ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
   WHERE D.distance BETWEEN 1.88 and 15.82 and insert_timestamp >'2021-12-31'
  ORDER BY detection_id Asc";
-                string query2 = @" 
-          DECLARE @yesterday DATETIME
-    = DATEADD(DAY, -1, CAST(GETDATE() AS DATE));
-
-DECLARE @today DATETIME = CAST(GETDATE() AS DATE);
-
-
-SELECT D.[detection_id]
-      ,D.[reader_uwb_id]
+                string query2 = @"SELECT  DISTINCT( detection_id  ) ,
+      D.[reader_uwb_id]
       ,D.[tag_id]
-      ,D.[tag_temperature]
       ,D.[distance]
       ,D.[insert_timestamp]
+	  ,Emplacement
+	  ,A.Fonction
+      
+     
+  FROM [RFID_SURAL_2].[dbo].[noovelia_kencee_detection] as D
+INNER JOIN dbo.noovelia_kencee_antenne as A
+ON A.Reader_uwb_id=D.reader_uwb_id 
+INNER JOIN dbo.noovelia_kencee_balise as B
+ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE'
+and B.Location_ID=A.Location_ID 
+ORDER BY Emplacement ,insert_timestamp desc
+ ";
+                string query3 = @"
+SELECT  ( detection_id  ) ,
+      D.[reader_uwb_id]
+      ,D.[tag_id]
+,D.tag_temperature
+
+      ,D.[distance],Emplacement
+      ,D.[insert_timestamp]
+	  
 	 
+      
+     
+  FROM [RFID_SURAL_2].[dbo].[noovelia_kencee_detection] as D
+
+INNER JOIN dbo.noovelia_kencee_antenne as A
+ON A.Reader_uwb_id=D.reader_uwb_id 
+INNER JOIN dbo.noovelia_kencee_balise as B
+ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE'
+and B.Location_ID=A.Location_ID 
+
+ORDER BY Emplacement ,insert_timestamp asc
 
 
-FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
-  WHERE (D.[insert_timestamp] >= @yesterday +'08:00:00.000' and  D.[insert_timestamp]<@today +'08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
-ORDER BY D.detection_id Asc  ";
+";
 
-                SqlCommand cmd = new SqlCommand(query2, SQLConnection);
+                SqlCommand cmd = new SqlCommand(query3, SQLConnection);
                 SQLConnection.Open();
                 DataTable d_table = new DataTable();
                 d_table.Load(cmd.ExecuteReader());
@@ -207,11 +229,12 @@ ORDER BY D.detection_id Asc  ";
 
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
                 //ORIGINAL LINE: BD = new string[(size)][8]; // tableau
-                BD = Algo.RectangularArrays.RectangularStringArray((size), 7); // tableau du nombre d'elements +1
-                ligne = new int[(size)];       
+                BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
+                ligne = new int[(size)];
 
 
 
+                WriteLine("ECRIT DANS LE FICHIER  ");
 
                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                 {
@@ -228,15 +251,15 @@ ORDER BY D.detection_id Asc  ";
                     }
                 }
 
-                Write(BD[8478][4]);
-                Write(" -- ");
-                WriteLine(BD[8478][7]);
-                Write(" -- ");
+               // Write(BD[8478][4]);
+                //Write(" -- ");
+                //WriteLine(BD[8478][7]);
+                //Write(" -- ");
                 //Console.Write(BD[8478][8]);
                 m = 0;
                 for (int i = 1; i < size; i++)
                 {
-                    double extremite1 = Double.Parse(BD[i][4],System.Globalization.CultureInfo.InvariantCulture);
+                    double extremite1 = double.Parse(BD[i][4],System.Globalization.CultureInfo.InvariantCulture);
                     double extremite2 = double.Parse(BD[i][4], System.Globalization.CultureInfo.InvariantCulture);
                     if ( (extremite1 > 7.393) & extremite2 < 15.82)
                     {
@@ -385,11 +408,11 @@ ORDER BY D.detection_id Asc  ";
                             writer.Write(";");
                             cp[j][3] = BD[ToInt32(Convert.ToString(CP[j][0].ToString()))][6];
                             writer.Write(cp[j][3]);
-                            writer.Write(";");
-                           cp[j][4] = (CP[j][0],
-                               System.Globalization.CultureInfo.InvariantCulture).ToString(); //numero de la ligne
-                            writer.Write(cp[j][4]);
-                            writer.WriteLine(";");
+                           // writer.Write(";");
+                           //cp[j][4] = (CP[j][0],
+                           //    System.Globalization.CultureInfo.InvariantCulture).ToString(); //numero de la ligne
+                           // writer.Write(cp[j][4]);
+                           writer.WriteLine(";");
                             i = 8;
 
 
