@@ -199,11 +199,9 @@ ORDER BY D.detection_id Asc  ";
                 }
 
 
-                bd = new int[m][];
                 bd = Algo.RectangularArrays.RectangularIntArray(m, 8);
-                cp = new string[bd.Length][];
                 cp = Algo.RectangularArrays.RectangularStringArray(bd.Length, 8);
-                WriteLine(bd.Length);
+                WriteLine("La longeur est de : "+bd.Length);
 
 
                 k = 0; // variable pour placer la ligne dans le tableau bd
@@ -238,6 +236,7 @@ ORDER BY D.detection_id Asc  ";
                         }
 
                         tempo = double.Parse(BD[ligne[i]][4], CultureInfo.InvariantCulture);
+                        n = 1;
                     }
 
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
