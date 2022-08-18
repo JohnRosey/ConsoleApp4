@@ -30,26 +30,7 @@ namespace ConsoleApp4
 
                 //Create Connection to SQL Server in which you like to load files
 
-                //Read data from table or view to data table
-                //               string query = @" SELECT D.[detection_id],D.[reader_uwb_id]
-                //     ,D.[tag_id]
-                //     ,D.[tag_temperature]
-                //     ,D.[distance]
-                //     ,D.[tag_motion]
-                //     ,D.[insert_timestamp]
-                //  , FORMAT(D.insert_timestamp, 'yyyy-MM-dd') as date
-                //, FORMAT(D.insert_timestamp, 'hh:mm:s s') as time
-                //  ,A.Reader_uwb_id
-                //  ,E.Emplacement
-                //  ,E.Fonction
-
-                // FROM[ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
-                //  INNER JOIN[ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].[dbo].[noovelia_kencee_antenne]
-                //as A ON A.Reader_uwb_id = D.reader_uwb_id and A.Etat = 'ACTIF'
-                //INNER JOIN[ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].[dbo].[noovelia_kencee_Emplacement] as E
-                //ON A.Emplacement = E.Emplacement and E.Fonction = 'Suivi de lopération de la pince à croute lors des changements danodes'
-                // WHERE insert_timestamp >= '08:00:00'
-                //ORDER BY detection_id Asc";
+                
                 SqlConnection SQLConnection = new SqlConnection();
                 SQLConnection.ConnectionString = @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
 
