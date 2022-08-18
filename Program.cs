@@ -211,7 +211,7 @@ ORDER BY D.detection_id Asc  ";
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
                 ligne = new int[(size)];
 
-                using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart}_{datetime}{FileExtension}"))
+                using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
