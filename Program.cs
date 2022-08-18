@@ -20,8 +20,8 @@ namespace ConsoleApp4
 
                 //Declare Variables and provide values
                 var FileNamePart = "Detection"; //Datetime will be added to it
-                var DestinationFolderWriter = @"O:\Temporaire\Olivier Fortin\Fichier ecriture csv";
-                var DestinationFolderReader = @"O:\Temporaire\Olivier Fortin\Fichier lecture csv";
+                var DestinationFolderWriter = @"A:\Temporaire\Olivier Fortin\Fichier ecriture csv";
+                var DestinationFolderReader = @"A:\Temporaire\Olivier Fortin\Fichier lecture csv";
 
                 var FileDelimiter = ";"; //You can provide comma or pipe or whatever you like
                 var FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
@@ -32,7 +32,7 @@ namespace ConsoleApp4
 
                 var SQLConnection = new SqlConnection();
                 SQLConnection.ConnectionString =
-                    @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
+                    @"Data Source = .; Database =RFID_SURAL_2 ;Integrated Security=SSPI";
 
                 var query = @"SELECT   ( detection_id  ) ,
       D.[reader_uwb_id]
@@ -51,7 +51,22 @@ ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE' WHERE [insert_t
 and B.Nom_Emplacement=A.Nom_Emplacement    
 ORDER BY Emplacement ,detection_id desc";
 
+                var query3 = @"SELECT   ( detection_id  ) ,
+      D.[reader_uwb_id]
+      ,D.[tag_id]
+,D.tag_temperature
+      ,D.[distance],Emplacement
+      ,D.[insert_timestamp]   
+  
+  FROM[dbo].[noovelia_kencee_detection] as D
+  
+INNER JOIN dbo.noovelia_kencee_antenne as A
+ON A.Reader_uwb_id=D.reader_uwb_id 
 
+INNER JOIN dbo.noovelia_kencee_balise as B
+ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE' WHERE [insert_timestamp]>='2022-05-31'
+and B.Location_ID=A.Location_ID    
+ORDER BY Emplacement ,detection_id desc";
 
                 var query2 = @" 
           DECLARE @yesterday DATETIME
@@ -73,7 +88,7 @@ FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detecti
   WHERE (D.[insert_timestamp] >= @yesterday +'08:00:00.000' and  D.[insert_timestamp]<@today +'08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
 ORDER BY D.detection_id Asc  ";
 
-                var cmd = new SqlCommand(query, SQLConnection);
+                var cmd = new SqlCommand(query3, SQLConnection);
                 SQLConnection.Open();
                 var d_table = new DataTable();
                 d_table.Load(cmd.ExecuteReader());
@@ -138,7 +153,6 @@ ORDER BY D.detection_id Asc  ";
                     new[] { 1, 16, 15.32 }
                 };
 
-                WriteLine(k);
 
                 /* etape 1
                  * etape 2
@@ -177,21 +191,20 @@ ORDER BY D.detection_id Asc  ";
                     while (!ReferenceEquals(st = br.ReadLine(), null))
                     {
                         mots = st.Split(';');
-                        for (int i = 0; i < 6; i++) BD[x][i] = mots[i];
+                        for (int i = 0; i < 7; i++) BD[x][i] = mots[i];
 
                         x += 1;
-                        BD[x - 1][6] = x.ToString();
+                        BD[x - 1][7] = x.ToString();
                     }
                 }
-
+WriteLine(BD[4500][5]);
 
                 //Console.Write(BD[8478][8]);
-                m = 0;
                 for (int i = 1; i < size; i++)
                 {
                     var extremite1 = double.Parse(BD[i][4], CultureInfo.InvariantCulture);
                     var extremite2 = double.Parse(BD[i][4], CultureInfo.InvariantCulture);
-                    if ((extremite1 > 7.393) & (extremite2 < 15.82))
+                    if ((extremite1 > 7.3) & (extremite2 < 15.8))
                     {
                         ligne[m] = i;
                         m += 1;
@@ -222,6 +235,8 @@ ORDER BY D.detection_id Asc  ";
                     {
                         n += 1;
                         tempo = double.Parse(BD[ligne[i]][4], CultureInfo.InvariantCulture);
+                        WriteLine(ligne[i]-1);
+                       
                     }
                     else
                     {
@@ -238,7 +253,8 @@ ORDER BY D.detection_id Asc  ";
                         tempo = double.Parse(BD[ligne[i]][4], CultureInfo.InvariantCulture);
                         n = 1;
                     }
-
+                
+ WriteLine(BD[ligne[7]][4]);
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
                 //ORIGINAL LINE: CP = new int[k][2];
                 CP = Algo.RectangularArrays.RectangularIntArray(k, 2);
@@ -306,7 +322,7 @@ ORDER BY D.detection_id Asc  ";
 
                         //System.out.print(j);
                         //System.out.print(" - ");
-                        writer.Write(cp[j][0] + " --- " + numero_anodes[i][1]);
+                        writer.Write(cp[j][0] + "-" + numero_anodes[i][1]);
                         writer.Write(";");
  cp[j][1] = BD[ToInt32(Convert.ToString(CP[j][0].ToString())) - 1][5];//Emplacement 
                         writer.Write(cp[j][1]);
