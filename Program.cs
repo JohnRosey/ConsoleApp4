@@ -20,8 +20,8 @@ namespace ConsoleApp4
 
                 //Declare Variables and provide values
                 var FileNamePart = "Detection"; //Datetime will be added to it
-                var DestinationFolderWriter = @"A:\Temporaire\Olivier Fortin\Fichier ecriture csv";
-                var DestinationFolderReader = @"A:\Temporaire\Olivier Fortin\Fichier lecture csv";
+                var DestinationFolderWriter = @"O:\Temporaire\Olivier Fortin\Fichier ecriture csv";
+                var DestinationFolderReader = @"O:\Temporaire\Olivier Fortin\Fichier lecture csv";
 
                 var FileDelimiter = ";"; //You can provide comma or pipe or whatever you like
                 var FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
@@ -32,8 +32,8 @@ namespace ConsoleApp4
 
                 var SQLConnection = new SqlConnection();
                 SQLConnection.ConnectionString =
-                    @"Data Source = .; Database =RFID_SURAL_2 ;Integrated Security=SSPI";
-
+                    SQLConnection.ConnectionString =
+                        @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
                 var query = @"SELECT   ( detection_id  ) ,
       D.[reader_uwb_id]
       ,D.[tag_id]
