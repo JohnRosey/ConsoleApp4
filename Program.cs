@@ -34,24 +34,22 @@ namespace ConsoleApp4
                 SQLConnection.ConnectionString =
                     @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
 
-                var query = @"SELECT  ( detection_id  ) ,
+                var query = @"SELECT   ( detection_id  ) ,
       D.[reader_uwb_id]
       ,D.[tag_id]
 ,D.tag_temperature
-      ,D.[distance]
-,Emplacement
-      ,D.[insert_timestamp]
-	  
-	 
-      
-     
-  FROM [ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].[dbo].[kencee_detection] as D
+      ,D.[distance],Emplacement
+      ,D.[insert_timestamp]   
+  
+  FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
+  
 INNER JOIN [ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].dbo.noovelia_kencee_antenne as A
 ON A.Reader_uwb_id=D.reader_uwb_id 
+
 INNER JOIN [ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].dbo.noovelia_kencee_balise as B
-ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE'
-and B.Nom_Emplacement=A.Nom_Emplacement 
-ORDER BY Emplacement, insert_timestamp asc";
+ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE' WHERE [insert_timestamp]>='2022-05-31'
+and B.Nom_Emplacement=A.Nom_Emplacement    
+ORDER BY Emplacement ,detection_id asc";
                 var query2 = @" 
           DECLARE @yesterday DATETIME
     = DATEADD(DAY, -1, CAST(GETDATE() AS DATE));
