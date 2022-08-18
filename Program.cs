@@ -102,7 +102,7 @@ FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detecti
   WHERE (D.[insert_timestamp] >= @yesterday +'08:00:00.000' and  D.[insert_timestamp]<@today +'08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
 ORDER BY D.detection_id Asc  ";
 
-                SqlCommand cmd = new SqlCommand(query2, SQLConnection);
+                SqlCommand cmd = new SqlCommand(query, SQLConnection);
                 SQLConnection.Open();
                 DataTable d_table = new DataTable();
                 d_table.Load(cmd.ExecuteReader());
@@ -195,7 +195,7 @@ ORDER BY D.detection_id Asc  ";
 
 
 
-                 using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
@@ -211,7 +211,7 @@ ORDER BY D.detection_id Asc  ";
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
                 ligne = new int[(size)];
 
-                using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart}_{datetime}{FileExtension}"))
+                using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart}_{datetime}{FileExtension}"))
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
@@ -347,8 +347,7 @@ ORDER BY D.detection_id Asc  ";
 
                 //FileWriter fw = new FileWriter("PC/DETECTION_DATA_ANODES2.txt");
 
-                string fileName = $@"A:\ABI1\PC\detection_traiter{datetime}.csv";
-                //string encoding = "UTF-8";
+                string fileName = $"{DestinationFolderReader}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";                //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
                 writer.Write("anode_number;scope_time;location_name;timestamp;line_number\n");
