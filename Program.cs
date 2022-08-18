@@ -69,7 +69,7 @@ ON A.Reader_uwb_id=D.reader_uwb_id
 INNER JOIN [ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].dbo.noovelia_kencee_balise as B
 ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE'
 and B.Nom_Emplacement=A.Nom_Emplacement 
-ORDER BY Emplacement ,insert_timestamp asc";
+ORDER BY insert_timestamp asc";
                 string query2 = @" 
           DECLARE @yesterday DATETIME
     = DATEADD(DAY, -1, CAST(GETDATE() AS DATE));
