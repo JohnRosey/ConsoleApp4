@@ -53,7 +53,7 @@ namespace ConsoleApp4
                 SqlConnection SQLConnection = new SqlConnection();
                 SQLConnection.ConnectionString = @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
 
-                string query = @"SELECT  ( detection_id  ) ,
+                string query = @"SELECT DISTINCT ( detection_id  ) ,
       D.[reader_uwb_id]
       ,D.[tag_id]
 ,D.tag_temperature
