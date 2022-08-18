@@ -32,8 +32,8 @@ namespace ConsoleApp4
 
                 var SQLConnection = new SqlConnection();
                 SQLConnection.ConnectionString =
-                    SQLConnection.ConnectionString =
-                        @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
+                    @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
+
                 var query = @"SELECT   ( detection_id  ) ,
       D.[reader_uwb_id]
       ,D.[tag_id]
