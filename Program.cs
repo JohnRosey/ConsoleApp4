@@ -33,8 +33,8 @@ namespace ConsoleApp4
 
                 //Declare Variables and provide values
                 string FileNamePart = "Detection";//Datetime will be added to it
-                string DestinationFolderWriter = @"A:\Temporaire\Olivier Fortin\Fichier ecriture csv";
-                string DestinationFolderReader = @"A:\Temporaire\Olivier Fortin\Fichier lecture csv";
+                string DestinationFolderWriter = @"O:\Temporaire\Olivier Fortin\Fichier ecriture csv";
+                string DestinationFolderReader = @"O:\Temporaire\Olivier Fortin\Fichier lecture csv";
 
                 string FileDelimiter = ";"; //You can provide comma or pipe or whatever you like
                 string FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
@@ -63,7 +63,7 @@ namespace ConsoleApp4
                 // WHERE insert_timestamp >= '08:00:00'
                 //ORDER BY detection_id Asc";
                 SqlConnection SQLConnection = new SqlConnection();
-                SQLConnection.ConnectionString = @"Data Source = .; Database =RFID_SURAL_2 ;Integrated Security=SSPI";
+                SQLConnection.ConnectionString = @"Data Source = ABI-SMT-SQL-CL1.apm.alcoa.com; Database =SMART DFRM ;Integrated Security=SSPI";
 
                 string query = @" 
            SELECT 
@@ -78,49 +78,27 @@ D.[detection_id],
   FROM[ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
   WHERE D.distance BETWEEN 1.88 and 15.82 and insert_timestamp >'2021-12-31'
  ORDER BY detection_id Asc";
-                string query2 = @"SELECT  DISTINCT( detection_id  ) ,
-      D.[reader_uwb_id]
+                string query2 = @" 
+          DECLARE @yesterday DATETIME
+    = DATEADD(DAY, -1, CAST(GETDATE() AS DATE));
+
+DECLARE @today DATETIME = CAST(GETDATE() AS DATE);
+
+
+SELECT D.[detection_id]
+      ,D.[reader_uwb_id]
       ,D.[tag_id]
+      ,D.[tag_temperature]
       ,D.[distance]
       ,D.[insert_timestamp]
-	  ,Emplacement
-	  ,A.Fonction
-      
-     
-  FROM [RFID_SURAL_2].[dbo].[noovelia_kencee_detection] as D
-INNER JOIN dbo.noovelia_kencee_antenne as A
-ON A.Reader_uwb_id=D.reader_uwb_id 
-INNER JOIN dbo.noovelia_kencee_balise as B
-ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE'
-and B.Location_ID=A.Location_ID 
-ORDER BY Emplacement ,insert_timestamp desc
- ";
-                string query3 = @"
-SELECT  ( detection_id  ) ,
-      D.[reader_uwb_id]
-      ,D.[tag_id]
-,D.tag_temperature
-
-      ,D.[distance],Emplacement
-      ,D.[insert_timestamp]
-	  
 	 
-      
-     
-  FROM [RFID_SURAL_2].[dbo].[noovelia_kencee_detection] as D
-
-INNER JOIN dbo.noovelia_kencee_antenne as A
-ON A.Reader_uwb_id=D.reader_uwb_id 
-INNER JOIN dbo.noovelia_kencee_balise as B
-ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE'
-and B.Location_ID=A.Location_ID 
-
-ORDER BY Emplacement ,insert_timestamp asc
 
 
-";
+FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detection] as D
+  WHERE (D.[insert_timestamp] >= @yesterday +'08:00:00.000' and  D.[insert_timestamp]<@today +'08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
+ORDER BY D.detection_id Asc  ";
 
-                SqlCommand cmd = new SqlCommand(query3, SQLConnection);
+                SqlCommand cmd = new SqlCommand(query2, SQLConnection);
                 SQLConnection.Open();
                 DataTable d_table = new DataTable();
                 d_table.Load(cmd.ExecuteReader());
@@ -132,8 +110,6 @@ ORDER BY Emplacement ,insert_timestamp asc
                 string FileFullPath = $"{DestinationFolderWriter}\\{FileNamePart+"_"+"BRUTE"}_{datetime}{FileExtension}";
 
                 StreamWriter sw = null;
-
-                //ECRITURE DU FICHIER CSV
                 sw = new StreamWriter(FileFullPath, false);
 
                 //// Write the Header Row to File
@@ -214,29 +190,24 @@ ORDER BY Emplacement ,insert_timestamp asc
                 //PC/DETECTION_DATA_ANODES2.txt
 
 
-                WriteLine("COMPTE LE NOMBRE DE LIGNES ");
-                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+
+                 using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
                // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
-                        size += 1;
+                        size = size + 1;
                     }
                 }
 
-                WriteLine("NOMBRE DE LIGNES EST DE : "+size);
-
+                WriteLine(size);
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
                 //ORIGINAL LINE: BD = new string[(size)][8]; // tableau
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
                 ligne = new int[(size)];
 
-
-
-                WriteLine("ECRIT DANS LE FICHIER  ");
-
-                using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+                using (StreamReader br = new StreamReader($"{DestinationFolderReader}\\{FileNamePart}_{datetime}{FileExtension}"))
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
@@ -246,25 +217,25 @@ ORDER BY Emplacement ,insert_timestamp asc
                             BD[x][i] = mots[i];
                         }
 
-                        x += 1;
+                        x = x + 1;
                         BD[x - 1][7] = x.ToString();
                     }
                 }
 
-               // Write(BD[8478][4]);
-                //Write(" -- ");
-                //WriteLine(BD[8478][7]);
-                //Write(" -- ");
+                Write(BD[8478][4]);
+                Write(" -- ");
+                WriteLine(BD[8478][7]);
+                Write(" -- ");
                 //Console.Write(BD[8478][8]);
                 m = 0;
                 for (int i = 1; i < size; i++)
                 {
-                    double extremite1 = double.Parse(BD[i][4],System.Globalization.CultureInfo.InvariantCulture);
+                    double extremite1 = Double.Parse(BD[i][4],System.Globalization.CultureInfo.InvariantCulture);
                     double extremite2 = double.Parse(BD[i][4], System.Globalization.CultureInfo.InvariantCulture);
                     if ( (extremite1 > 7.393) & extremite2 < 15.82)
                     {
                         ligne[m] = i;
-                        m += 1;
+                        m = m + 1;
                     }
 
                 }
@@ -302,7 +273,7 @@ ORDER BY Emplacement ,insert_timestamp asc
                     if ((double.Parse(BD[ligne[i]][4], System.Globalization.CultureInfo.InvariantCulture) - 0.4) < tempo.Value &
                         (double.Parse(BD[ligne[i]][4], System.Globalization.CultureInfo.InvariantCulture) + 0.4) > tempo.Value & ligne[i] == ligne[i - 1] + 1)
                     {
-                        n += 1;
+                        n = n + 1;
                         tempo = double.Parse(BD[ligne[i]][4], System.Globalization.CultureInfo.InvariantCulture);
                        
                     }
@@ -344,12 +315,12 @@ ORDER BY Emplacement ,insert_timestamp asc
                     {
                         if ((double.Parse(BD[bd[j][0] + i][4], System.Globalization.CultureInfo.InvariantCulture) > 3.8) & (double.Parse(BD[bd[j][0] + i][4], System.Globalization.CultureInfo.InvariantCulture) < 5.2))
                         {
-                            n += 1;
+                            n = n + 1;
                             if (n > 1)
                             {
                                 CP[k][0] = bd[j][0];
                                 CP[k][1] = bd[j][1];
-                                k += 1;
+                                k = k + 1;
                                 i = 10;
                                  
                             }
@@ -372,7 +343,7 @@ ORDER BY Emplacement ,insert_timestamp asc
 
                 //FileWriter fw = new FileWriter("PC/DETECTION_DATA_ANODES2.txt");
 
-                string fileName = $"{DestinationFolderReader}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";
+                string fileName = $@"A:\ABI1\PC\detection_traiter{datetime}.csv";
                 //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
@@ -408,11 +379,11 @@ ORDER BY Emplacement ,insert_timestamp asc
                             writer.Write(";");
                             cp[j][3] = BD[ToInt32(Convert.ToString(CP[j][0].ToString()))][6];
                             writer.Write(cp[j][3]);
-                           // writer.Write(";");
-                           //cp[j][4] = (CP[j][0],
-                           //    System.Globalization.CultureInfo.InvariantCulture).ToString(); //numero de la ligne
-                           // writer.Write(cp[j][4]);
-                           writer.WriteLine(";");
+                            writer.Write(";");
+                           cp[j][4] = (CP[j][0],
+                               System.Globalization.CultureInfo.InvariantCulture).ToString(); //numero de la ligne
+                            writer.Write(cp[j][4]);
+                            writer.WriteLine(";");
                             i = 8;
 
 
