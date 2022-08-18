@@ -10,19 +10,7 @@ using static System.Convert;
 namespace ConsoleApp4
 {
     internal class Program
-    { public static void  FolderProperty(){
-            string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
-            string DestinationFolderWriter = @"O:\Temporaire\Olivier Fortin\Fichier ecriture csv";
-            string DestinationFolderReader = @"O:\Temporaire\Olivier Fortin\Fichier lecture csv";
-
-
-            string FileDelimiter = ";"; //You can provide comma or pipe or whatever you like
-            string FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
-
-           // string FileFullPath = $"{DestinationFolderWriter}\\{FileNamePart}_{datetime}{FileExtension}";
-
-
-        }
+    {
         static void Main(string[] args)
         {
             string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -195,7 +183,7 @@ ORDER BY D.detection_id Asc  ";
 
 
 
-                 using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+                 using (StreamReader br = new StreamReader(FileFullPath))
                // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
@@ -205,13 +193,14 @@ ORDER BY D.detection_id Asc  ";
                     }
                 }
 
-                WriteLine(size);
+                WriteLine("Le nombre de lignes est de : "+size);
                 //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
                 //ORIGINAL LINE: BD = new string[(size)][8]; // tableau
+                WriteLine("Separation des colones en cours avec des ';'");
                 BD = Algo.RectangularArrays.RectangularStringArray((size), 8); // tableau du nombre d'elements +1
                 ligne = new int[(size)];
 
-                using (StreamReader br = new StreamReader($"{DestinationFolderWriter}\\{FileNamePart + "_" + "BRUTE"}_{datetime}{FileExtension}"))
+                using (StreamReader br = new StreamReader(FileFullPath))
                 {
                     while (!string.ReferenceEquals((st = br.ReadLine()), null))
                     {
@@ -226,10 +215,7 @@ ORDER BY D.detection_id Asc  ";
                     }
                 }
 
-                Write(BD[8478][4]);
-                Write(" -- ");
-                WriteLine(BD[8478][7]);
-                Write(" -- ");
+               
                 //Console.Write(BD[8478][8]);
                 m = 0;
                 for (int i = 1; i < size; i++)
@@ -346,7 +332,7 @@ ORDER BY D.detection_id Asc  ";
                  */
 
                 //FileWriter fw = new FileWriter("PC/DETECTION_DATA_ANODES2.txt");
-
+                WriteLine("Comptage du nombre de coup de pinces");
                 string fileName = $"{DestinationFolderReader}\\{FileNamePart + "_" + "TRAITER"}_{datetime}{FileExtension}";                //string encoding = "UTF-8";
                 TextWriter writer = new StreamWriter(fileName);
                 //  var entete= string.Format("{0};{1};{2};{3};{4};{5};{6}",numero_anodes,scope_time,time)
