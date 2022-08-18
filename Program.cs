@@ -50,6 +50,9 @@ INNER JOIN [ABI-MES-QA.APM.ALCOA.COM].[RFID_SURAL_2].dbo.noovelia_kencee_balise 
 ON B.Fonction='PINCE À CROUTE' and A.fonction='PINCE À CROUTE' WHERE [insert_timestamp]>='2022-05-31'
 and B.Nom_Emplacement=A.Nom_Emplacement    
 ORDER BY Emplacement ,detection_id asc";
+
+
+
                 var query2 = @" 
           DECLARE @yesterday DATETIME
     = DATEADD(DAY, -1, CAST(GETDATE() AS DATE));
@@ -149,7 +152,7 @@ ORDER BY D.detection_id Asc  ";
                 var x = 0;
                 string st;
                 string[] mots = null;
-                var size = 0;
+                int size = 0;
                 //https://github.com/Nebrosed/ABI1/blob/ef5b82968537c1d85728f105f441b8840e3fd16a/PC/DETECTION_DATA_ANODES2.txt
                 //https://github.com/Nebrosed/ABI1/blob/main/PC/DETECTION_DATA_ANODES2.txt
                 ///workspace/ABI1/PC/DETECTION_DATA_ANODES2.txt
@@ -160,12 +163,11 @@ ORDER BY D.detection_id Asc  ";
                     // using (StreamReader br = new StreamReader(@"A:\ABI1\PC\detection.csv"))
 
                 {
-                    while (!ReferenceEquals(st = br.ReadLine(), null)) size = size + 1;
+                    while (!ReferenceEquals(st = br.ReadLine(), null)) size += 1;
                 }
 
                 WriteLine("Le nombre de lignes est de : " + size);
-                //JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
-                //ORIGINAL LINE: BD = new string[(size)][8]; // tableau
+                
                 WriteLine("Separation des colones en cours avec des ';'");
                 BD = Algo.RectangularArrays.RectangularStringArray(size, 8); // tableau du nombre d'elements +1
                 ligne = new int[size];
@@ -175,9 +177,9 @@ ORDER BY D.detection_id Asc  ";
                     while (!ReferenceEquals(st = br.ReadLine(), null))
                     {
                         mots = st.Split(';');
-                        for (var i = 0; i < 7; i++) BD[x][i] = mots[i];
+                        for (int i = 0; i < 7; i++) BD[x][i] = mots[i];
 
-                        x = x + 1;
+                        x += 1;
                         BD[x - 1][7] = x.ToString();
                     }
                 }
@@ -185,14 +187,14 @@ ORDER BY D.detection_id Asc  ";
 
                 //Console.Write(BD[8478][8]);
                 m = 0;
-                for (var i = 1; i < size; i++)
+                for (int i = 1; i < size; i++)
                 {
                     var extremite1 = double.Parse(BD[i][4], CultureInfo.InvariantCulture);
                     var extremite2 = double.Parse(BD[i][4], CultureInfo.InvariantCulture);
                     if ((extremite1 > 7.393) & (extremite2 < 15.82))
                     {
                         ligne[m] = i;
-                        m = m + 1;
+                        m += 1;
                     }
                 }
 
@@ -213,14 +215,14 @@ ORDER BY D.detection_id Asc  ";
 
                 n = 0;
 
-                for (var i = 1;
+                for (int i = 1;
                      i < bd.Length;
                      i++)
                     if ((double.Parse(BD[ligne[i]][4], CultureInfo.InvariantCulture) - 0.4 < tempo.Value) &
                         (double.Parse(BD[ligne[i]][4], CultureInfo.InvariantCulture) + 0.4 > tempo.Value) &
                         (ligne[i] == ligne[i - 1] + 1))
                     {
-                        n = n + 1;
+                        n += 1;
                         tempo = double.Parse(BD[ligne[i]][4], CultureInfo.InvariantCulture);
                     }
                     else
@@ -253,17 +255,17 @@ ORDER BY D.detection_id Asc  ";
                 n = 1; // variable du nombre de point consecutif
                 k = 0;
 
-                for (var j = 0; j < CP.Length; j++)
-                for (var i = 0; i <= 10; i++)
+                for (int j = 0; j < CP.Length; j++)
+                for (int i = 0; i <= 10; i++)
                     if ((double.Parse(BD[bd[j][0] + i][4], CultureInfo.InvariantCulture) > 3.8) &
                         (double.Parse(BD[bd[j][0] + i][4], CultureInfo.InvariantCulture) < 5.2))
                     {
-                        n = n + 1;
+                        n += 1;
                         if (n > 1)
                         {
                             CP[k][0] = bd[j][0];
                             CP[k][1] = bd[j][1];
-                            k = k + 1;
+                            k += 1;
                             i = 10;
                         }
                     }
@@ -290,12 +292,12 @@ ORDER BY D.detection_id Asc  ";
                 writer.Write("numero_anode;emplacement;temps_passer;timestamp;numero_de_ligne\n");
 
                 // writer.Write(writer.NewLine);
-                for (var j = 0; j < k; j++)
+                for (int j = 0; j < k; j++)
                     //WriteLine(BD[CP[j][0] - 1][4]);
                     //WriteLine(" - ");
                     //WriteLine(j);
                     //WriteLine(k);
-                for (var i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++)
                     if ((double.Parse(BD[CP[j][0] - 1][4], CultureInfo.InvariantCulture) >
                          numero_anodes[i][2] - 0.5305) &
                         (double.Parse(BD[CP[j][0] - 1][4], CultureInfo.InvariantCulture) <=
