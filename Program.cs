@@ -88,7 +88,7 @@ FROM [ABI-MES-SQL-CL1.APM.ALCOA.COM].[RFID_SURAL].[dbo].[noovelia_kencee_detecti
   WHERE (D.[insert_timestamp] >= @yesterday +'08:00:00.000' and  D.[insert_timestamp]<@today +'08:00:00.000')  and (D.distance BETWEEN  1.88 and 15.82 ) 
 ORDER BY D.detection_id Asc  ";
 
-                var cmd = new SqlCommand(query3, SQLConnection);
+                var cmd = new SqlCommand(query2, SQLConnection);
                 SQLConnection.Open();
                 var d_table = new DataTable();
                 d_table.Load(cmd.ExecuteReader());
