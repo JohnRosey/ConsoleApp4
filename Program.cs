@@ -57,7 +57,7 @@ namespace ConsoleApp4
       D.[reader_uwb_id]
       ,D.[tag_id]
 ,D.tag_temperature
-      ,D.[distance],Emplacement
+      ,D.[distance]
       ,D.[insert_timestamp]
 	  
 	 
